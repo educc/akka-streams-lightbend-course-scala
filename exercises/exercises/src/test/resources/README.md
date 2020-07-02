@@ -1,6 +1,6 @@
-initial-state
+working-with-sources
 
-# Exercise 0 > Initial State
+# Exercise 1 > Working with Sources
 
 In the course video recordings, the instructor uses a `man e` command in the sbt interactive session to display exercise instructions.
 
