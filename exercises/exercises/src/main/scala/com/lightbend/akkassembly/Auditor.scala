@@ -1,10 +1,11 @@
 package com.lightbend.akkassembly
 
-import akka.Done
+import akka.{Done, NotUsed}
 import akka.event.LoggingAdapter
-import akka.stream.scaladsl.Sink
+import akka.stream.scaladsl.{Flow, Sink}
 
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 class Auditor {
 
@@ -15,4 +16,6 @@ class Auditor {
   def log(implicit adapter: LoggingAdapter): Sink[Any, Future[Done]] = Sink.foreach { it =>
     adapter.debug(it.toString)
   }
+
+  def sample(simpleSize: FiniteDuration): Flow[Car, Car, NotUsed] = Flow[Car].takeWithin(simpleSize)
 }
