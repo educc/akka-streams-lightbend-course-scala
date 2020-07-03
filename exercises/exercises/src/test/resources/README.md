@@ -1,6 +1,6 @@
-working-with-sources
+working-with-flows
 
-# Exercise 1 > Working with Sources
+# Exercise 3 > Working with Flows
 
 In the course video recordings, the instructor uses a `man e` command in the sbt interactive session to display exercise instructions.
 
