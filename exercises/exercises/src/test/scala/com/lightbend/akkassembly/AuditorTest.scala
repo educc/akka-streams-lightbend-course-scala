@@ -1,5 +1,6 @@
 package com.lightbend.akkassembly
 
+import akka.NotUsed
 import akka.stream.scaladsl.{Keep, Source}
 import akka.stream.testkit.scaladsl.{TestSource, TestSink}
 import akka.testkit.EventFilter
@@ -110,6 +111,47 @@ class AuditorTest extends FreeSpec with AkkaSpec {
 
       sink.expectNextN(expectedCars)
       sink.expectComplete()
+    }
+  }
+
+  "audit" - {
+    "should return zero if there are no cars in the stream" in {
+      val auditor = new Auditor()
+
+      val cars = Source.empty[Car]
+      val sampleSize = 100.millis
+
+      val result = auditor.audit(cars, sampleSize).futureValue
+
+      assert(result === 0)
+    }
+    "should return all cars if they are within the sample period" in {
+      val auditor = new Auditor()
+
+      val expectedQuantity = 10
+      val cars = Source.repeat(
+        Car(SerialNumber(), Color("000000"), Engine(), Seq.fill(4)(Wheel()), None)
+      ).take(expectedQuantity)
+      val sampleSize = 100.millis
+
+      val result = auditor.audit(cars, sampleSize).futureValue
+
+      assert(result === expectedQuantity)
+    }
+    "should limit the cars to only those that are within the sample period" in {
+      val auditor = new Auditor()
+
+      val cars = Source.tick(
+        40.millis,
+        40.millis,
+        Car(SerialNumber(), Color("000000"), Engine(), Seq.fill(4)(Wheel()), None)
+      )
+        .mapMaterializedValue(_ => NotUsed)
+      val sampleSize = 100.millis
+
+      val result = auditor.audit(cars, sampleSize).futureValue
+
+      assert(result === 2)
     }
   }
 }
