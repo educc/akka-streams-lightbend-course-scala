@@ -1,7 +1,7 @@
 package com.lightbend.akkassembly
 
 import akka.NotUsed
-import akka.stream.{FlowShape, SourceShape, UniformFanInShape}
+import akka.stream.FlowShape
 import akka.stream.scaladsl.{Balance, Flow, GraphDSL, Merge}
 
 class UpgradeShop {
@@ -15,16 +15,13 @@ class UpgradeShop {
         val balance = builder.add(Balance[UnfinishedCar](3))
         val merge = builder.add(Merge[UnfinishedCar](3))
 
-        val flowStandard = Flow[UnfinishedCar]
+        val flowStandard = Flow[UnfinishedCar].map(_.copy(upgrade = Option.empty))
         val flowSport = Flow[UnfinishedCar].map(it => it.copy(upgrade = Option(Upgrade.Sport)))
         val flowDx = Flow[UnfinishedCar].map(it => it.copy(upgrade = Option(Upgrade.DX)))
+        balance ~> flowStandard ~> merge
+        balance ~> flowSport ~> merge
+        balance ~> flowDx ~> merge
 
-        balance ~> flowStandard
-        balance ~> flowSport
-        balance ~> flowDx
-
-
-        UniformFanInShape(merge.out, balance.inlets(0), balance.inlets(1), balance.inlets(2))
         FlowShape(balance.in, merge.out)
     })
 

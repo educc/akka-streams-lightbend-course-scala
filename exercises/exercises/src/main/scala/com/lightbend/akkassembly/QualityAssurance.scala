@@ -25,7 +25,7 @@ class QualityAssurance {
         throw new CardFailedInspection(x)
       }
 
-      Car(SerialNumber(), x.color.get, x.engine.get, wheels = x.wheels, upgrade = Option.empty)
+      Car(SerialNumber(), x.color.get, x.engine.get, wheels = x.wheels, upgrade = x.upgrade)
     }
     .collect { case x => x }
     .withAttributes {
