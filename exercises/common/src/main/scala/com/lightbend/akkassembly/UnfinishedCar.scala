@@ -25,19 +25,19 @@ case class UnfinishedCar(color: Option[Color] = None,
   import UnfinishedCar._
 
   def paint(color: Color): UnfinishedCar = {
-    busy(0.millis)
+    busy(paintTime)
     copy(color = Some(color))
   }
   def installEngine(engine: Engine): UnfinishedCar = {
-    busy(0.millis)
+    busy(installEngineTime)
     copy(engine = Some(engine))
   }
   def installWheels(wheels: Seq[Wheel]): UnfinishedCar = {
-    busy(0.millis)
+    busy(installWheelsTime)
     copy(wheels = wheels)
   }
   def installUpgrade(upgrade: Upgrade): UnfinishedCar = {
-    busy(0.millis)
+    busy(installUpgradeTime)
     copy(upgrade = Some(upgrade))
   }
 }

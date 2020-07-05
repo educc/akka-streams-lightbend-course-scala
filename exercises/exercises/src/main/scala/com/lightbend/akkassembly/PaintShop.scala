@@ -13,10 +13,11 @@ class PaintShop(colorSet: Set[Color]) {
       Source.cycle(() => {
         if (colorSet.isEmpty) throw new RuntimeException
         colorSet.iterator
-      })
-    }.map ( it =>
+      }).named("paint-stage-cycleSource")
+    }.named("paint-stage-zipWith2")
+      .map ( it =>
       it._1.copy(color = Option(it._2))
-    )
+    ).named("paint-stage-map")
   }
 
 }
